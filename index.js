@@ -9,6 +9,8 @@ const Game = require('./models/game')
 const app = express()
 const port = process.env.PORT || 3001
 
+mongoose.set('useFindAndModify', false);
+
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
 
@@ -47,6 +49,32 @@ app.post('/api/game', (req, res) => {
     if (err) res.status(500).send({ message: `Data base error: ${err}` })
 
     res.status(200).send({game: gameStored})
+  })
+})
+
+app.put('/api/game/:gameId', (req, res) => {
+  let gameId = req.params.gameId
+  let update = req.body
+
+  Game.findByIdAndUpdate(gameId, update, (err, gameUpdated) => {
+    if (err) return res.status(500).send({ message: `Error finding or updating the game: ${err}` })
+    
+    res.status(200).send({ gameUpdated })
+  })
+})
+
+app.delete('/api/game/:gameId', (req, res) => {
+  let gameId = req.params.gameId
+
+  Game.findById(gameId, (err, game) => {
+    if (err) return res.status(500).send({ message: `Error finding in data base: ${err}` })
+    if (!game) return res.status(404).send({ message: 'Game not found' })
+    
+    game.remove(err => {
+      if (err) return res.status(500).send({ message: `Error removing the game: ${err}` })
+
+      res.status(200).send({ message: 'Game removed' })
+    })
   })
 })
 
