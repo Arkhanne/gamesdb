@@ -34,7 +34,7 @@ mongoose.connect('mongodb+srv://admin:neOX3VedWiSNzuk1@gamescluster.cvd5b.mongod
   if (err) {
     return console.log(`Failed to connect to data base: ${err}`)
   }
-  console.log('Connection to data base... OK')
+  console.log('Connection to data base...  OK')
 
   app.listen(port, () => {
     console.log(`GamesDB running in http://localhost:${port}`)
